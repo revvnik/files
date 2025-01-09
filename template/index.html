@@ -14,7 +14,10 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon-16x16.png">
+    <link rel="manifest" href="../assets/site.webmanifest">
 
     <!--REPLACE WITH https://files.revvnik.com/-->
     <title>Revvnik - Files</title>
@@ -30,8 +33,9 @@
     <div class="container hint">
         <p id="hintText">
             By clicking on the below button, you will receive a popup prompting for the decryption key. This is a
-            security measure.
+            security measure. <br> Please wait until all the images have loaded.
         </p>
+        <p id="imageLoadText">Images Loaded: </p>
         <div class="hintButtons">
             <button class="startDecryption" onclick="promptForKey();">&nbsp;&nbsp;Enter key&nbsp;&nbsp;</button>
         </div>
@@ -64,13 +68,22 @@
     </div>
     <script>
         async function promptForKey() {
-            const hexKey = prompt('Please enter the decryption key:');
-            if (hexKey) {
+            // Check if there's a decryption key in the URL query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const hexKeyFromURL = urlParams.get('decryptionKey');  // Assuming the key is passed as ?decryptionKey=YOUR_KEY
+
+            if (hexKeyFromURL) {
                 const { albumName, albumFiles, watermarkedFiles, instagramSizedFiles } = await loadEncryptedFiles();
-                decryptAndDisplayImages(albumFiles, hexKey, albumName, watermarkedFiles, instagramSizedFiles);
+                decryptAndDisplayImages(albumFiles, hexKeyFromURL, albumName, watermarkedFiles, instagramSizedFiles);
+            } else {
+                // If no key is found, prompt the user for the key
+                const hexKey = prompt('Please enter the decryption key:');
+                if (hexKey) {
+                    const { albumName, albumFiles, watermarkedFiles, instagramSizedFiles } = await loadEncryptedFiles();
+                    decryptAndDisplayImages(albumFiles, hexKey, albumName, watermarkedFiles, instagramSizedFiles);
+                }
             }
         }
-
         async function loadEncryptedFiles() {
             try {
                 const response = await fetch('images.json');
@@ -100,11 +113,24 @@
             const startDecryptionButton = $('.startDecryption'); // Get the "Enter key" button
             startDecryptionButton.prop('disabled', true);  // Disable it during decryption
 
+            // Track total images and loaded images
+            const totalImages = files.length + watermarkedFiles.length + instagramSizedFiles.length;
+            let loadedImages = 0;
+
+            // Function to update the hint text with loaded image count
+            function updateHintText() {
+                $('#imageLoadText').html(`Images Loaded: ${loadedImages}/${totalImages}`);
+            }
+
             // Create promises for decryption
             const promises = files.map((file, index) => {
                 const filePath = `encrypted/${file}`;
                 return decryptFile(filePath, key)
-                    .then(decryptedImageUrl => ({ index, url: decryptedImageUrl, fileName: file }))
+                    .then(decryptedImageUrl => {
+                        loadedImages++;
+                        updateHintText(); // Update the hint text on each load
+                        return { index, url: decryptedImageUrl, fileName: file };
+                    })
                     .catch(error => {
                         console.error(`Failed to decrypt ${file}: ${error.message}`);
                         return { index, url: null }; // Mark failure for this image
@@ -114,7 +140,11 @@
             const promisesWithWatermark = watermarkedFiles.map((file, index) => {
                 const filePath = `encrypted-watermarked/${file}`;
                 return decryptFile(filePath, key)
-                    .then(decryptedImageUrl => ({ index, url: decryptedImageUrl, fileName: file }))
+                    .then(decryptedImageUrl => {
+                        loadedImages++;
+                        updateHintText(); // Update the hint text on each load
+                        return { index, url: decryptedImageUrl, fileName: file };
+                    })
                     .catch(error => {
                         console.error(`Failed to decrypt ${file}: ${error.message}`);
                         return { index, url: null }; // Mark failure for this image
@@ -124,7 +154,11 @@
             const promisesResized = instagramSizedFiles.map((file, index) => {
                 const filePath = `encrypted-resized/${file}`;
                 return decryptFile(filePath, key)
-                    .then(decryptedImageUrl => ({ index, url: decryptedImageUrl, fileName: file }))
+                    .then(decryptedImageUrl => {
+                        loadedImages++;
+                        updateHintText(); // Update the hint text on each load
+                        return { index, url: decryptedImageUrl, fileName: file };
+                    })
                     .catch(error => {
                         console.error(`Failed to decrypt ${file}: ${error.message}`);
                         return { index, url: null }; // Mark failure for this image
