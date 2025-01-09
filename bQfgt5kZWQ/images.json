@@ -1,0 +1,18 @@
+{
+  "noWatermarkFiles": [
+    "4773-Duke390-Tobi-Potsdamer-Front-Angled-DriverSitting-No-Watermark.png",
+    "4781-Duke390-Tobi-Potsdamer-Side-Angled-DriverSitting-No-Watermark.png",
+    "4790-Duke390-Tobi-Potsdamer-Front-Below-DriverSitting-No-Watermark.png"
+  ],
+  "watermarkedFiles": [
+    "4773-Duke390-Tobi-Potsdamer-Front-Angled-DriverSitting-With-Watermark.png",
+    "4781-Duke390-Tobi-Potsdamer-Side-Angled-DriverSitting-With-Watermark.png",
+    "4790-Duke390-Tobi-Potsdamer-Front-Below-DriverSitting-With-Watermark.png"
+  ],
+  "instagramSizedFiles": [
+    "4773-Duke390-Tobi-Potsdamer-Front-Angled-DriverSitting.png",
+    "4781-Duke390-Tobi-Potsdamer-Side-Angled-DriverSitting.png",
+    "4790-Duke390-Tobi-Potsdamer-Front-Below-DriverSitting.png"
+  ],
+  "name": "Duke 390"
+}
