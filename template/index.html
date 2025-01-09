@@ -68,22 +68,22 @@
     </div>
     <script>
         async function promptForKey() {
-            // Check if there's a decryption key in the URL query parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const hexKeyFromURL = urlParams.get('decryptionKey');  // Assuming the key is passed as ?decryptionKey=YOUR_KEY
-
-            if (hexKeyFromURL) {
+            const hexKey = prompt('Please enter the decryption key:');
+            if (hexKey) {
                 const { albumName, albumFiles, watermarkedFiles, instagramSizedFiles } = await loadEncryptedFiles();
-                decryptAndDisplayImages(albumFiles, hexKeyFromURL, albumName, watermarkedFiles, instagramSizedFiles);
-            } else {
-                // If no key is found, prompt the user for the key
-                const hexKey = prompt('Please enter the decryption key:');
-                if (hexKey) {
-                    const { albumName, albumFiles, watermarkedFiles, instagramSizedFiles } = await loadEncryptedFiles();
-                    decryptAndDisplayImages(albumFiles, hexKey, albumName, watermarkedFiles, instagramSizedFiles);
+                decryptAndDisplayImages(albumFiles, hexKey, albumName, watermarkedFiles, instagramSizedFiles);
+
+                // Validate key length
+                if (hexKey.length !== 16 && hexKey.length !== 24 && hexKey.length !== 32) {
+                    alert('Key length must be 16, 24, or 32 characters.');
+                    return;
                 }
+
+            } else {
+                alert("No key provided.");
             }
         }
+
         async function loadEncryptedFiles() {
             try {
                 const response = await fetch('images.json');
@@ -283,12 +283,7 @@
             const key = hexToBytes(hexKey);
             const iv = new Uint8Array(16); // Default IV of zeros
 
-            // Validate key length
-            if (key.length !== 16 && key.length !== 24 && key.length !== 32) {
-                alert('Key length must be 16, 24, or 32 bytes.');
-                return;
-            }
-
+            
             // Extract file extension from filePath
             const extension = filePath.slice(filePath.lastIndexOf('.')).toLowerCase();
             let mimeType;
@@ -340,7 +335,6 @@
                 return url;
             } catch (error) {
                 console.error('Error during decryption:', error);
-                alert('Failed to decrypt the file.');
                 return null;
             }
         }
