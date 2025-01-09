@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "lightbox2": "^2.11.5",
     "sass": "^1.83.1"
   }
 }

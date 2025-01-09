@@ -218,12 +218,15 @@ h4 {
   align-items: center;
   flex-direction: column;
   text-align: center;
+}
+
+.hint p {
   opacity: 60%;
 }
 
 .hint button {
   border-radius: 10px;
-  width: calc(1.925rem + 20.5vw);
+  width: auto;
   height: 5vh;
   color: #f1f1f1;
   background-color: #262223;
@@ -277,10 +280,11 @@ h4 {
 .image-grid img {
   cursor: pointer;
   transition: transform 0.3s ease;
+  position: relative; /* Make image a positioning context for the button */
 }
 
 .image-grid img:hover {
-  transform: scale(1.05); /* Slight zoom effect on hover */
+  transform: scale(1.05); /* Slight zoom effect on hover  */
 }
 
 /* Image Grid Layout */
@@ -288,13 +292,19 @@ h4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  padding: 15px;
 }
 
 .image-grid img {
-  width: 100%;
+  width: 90%;
   height: auto;
-  border-radius: 8px;
+  border-radius: 10px;
+  margin: 5%;
+}
+
+/* Hover Effect for Button */
+.image-grid a:hover .selectButton {
+  opacity: 1; /* Fade in */
+  transition: opacity 0.5s ease;
 }
 
 /* Mobile view */
@@ -339,6 +349,60 @@ h4 {
     -webkit-transform: translateX(-1.8181818182px) rotate(-2deg);
     transform: translateX(-1.8181818182px) rotate(-2deg);
   }
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  left: 50%;
+  transform: translate(-50%);
+  text-align: center;
+}
+
+.footer p {
+  font-family: SFLight;
+  opacity: 50%;
+  color: #f1f1f1;
+}
+
+.footer a {
+  transition: transform 0.2s !important;
+}
+
+.footer a:hover {
+  transform: translateY(-3px) !important;
+}
+
+a,
+a:link,
+a:visited,
+a:active {
+  color: #f1f1f1;
+  transition: transform 0.2s !important;
+  z-index: 2000;
+}
+
+/*a:hover {
+    transform: translateY(-3px) !important;
+} */
+.wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 355px;
+}
+
+.selectButton {
+  position: absolute;
+  z-index: 1000;
+  margin-top: 25px;
+  margin-left: 25px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  opacity: 0;
 }
 
 /*# sourceMappingURL=style.css.map */
