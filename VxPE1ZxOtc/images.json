@@ -1,0 +1,36 @@
+{
+  "noWatermarkFiles": [
+    "02473-RS7-PerformanteRental-Garage-Back-Angled-No-Watermark.png",
+    "02486-RS7-PerformanteRental-Garage-Side-Detail-No-Watermark.png",
+    "02500-RS7-PerformanteRental-Garage-Back-Angled-LightsOn-No-Watermark.png",
+    "02502-RS7-PerformanteRental-Garage-Interior-Detail-No-Watermark.png",
+    "02507-RS7-PerformanteRental-Garage-Interior-Detail-No-Watermark.png",
+    "02543-RS7-PerformanteRental-Garage-Front-Angled-LightsOn-Landscape-No-Watermark.png",
+    "02551-RS7-PerformanteRental-Garage-Front-Angled-LightsOn-No-Watermark.png",
+    "02571-RS7-PerformanteRental-Garage-Back-Angled-LightsOn-Landscape-No-Watermark.png",
+    "02579-RS7-PerformanteRental-Garage-Interior-Detail-No-Watermark.png"
+  ],
+  "watermarkedFiles": [
+    "02473-RS7-PerformanteRental-Garage-Back-Angled-With-Watermark.png",
+    "02486-RS7-PerformanteRental-Garage-Side-Detail-With-Watermark.png",
+    "02500-RS7-PerformanteRental-Garage-Back-Angled-LightsOn-With-Watermark.png",
+    "02502-RS7-PerformanteRental-Garage-Interior-Detail-With-Watermark.png",
+    "02507-RS7-PerformanteRental-Garage-Interior-Detail-With-Watermark.png",
+    "02543-RS7-PerformanteRental-Garage-Front-Angled-LightsOn-Landscape-With-Watermark.png",
+    "02551-RS7-PerformanteRental-Garage-Front-Angled-LightsOn-With-Watermark.png",
+    "02571-RS7-PerformanteRental-Garage-Back-Angled-LightsOn-Landscape-With-Watermark.png",
+    "02579-RS7-PerformanteRental-Garage-Interior-Detail-With-Watermark.png"
+  ],
+  "instagramSizedFiles": [
+    "02473-RS7-PerformanteRental-Garage-Back-Angled.png",
+    "02486-RS7-PerformanteRental-Garage-Side-Detail.png",
+    "02500-RS7-PerformanteRental-Garage-Back-Angled-LightsOn.png",
+    "02502-RS7-PerformanteRental-Garage-Interior-Detail.png",
+    "02507-RS7-PerformanteRental-Garage-Interior-Detail.png",
+    "02543-RS7-PerformanteRental-Garage-Front-Angled-LightsOn-Landscape.png",
+    "02551-RS7-PerformanteRental-Garage-Front-Angled-LightsOn.png",
+    "02571-RS7-PerformanteRental-Garage-Back-Angled-LightsOn-Landscape.png",
+    "02579-RS7-PerformanteRental-Garage-Interior-Detail.png"
+  ],
+  "name": "RS7 PerformanteRental"
+}
