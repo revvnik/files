@@ -204,33 +204,30 @@
             const watermarkedFolder = zip.folder("Watermarked");
             const resizedFolder = zip.folder("Resized");
 
-
-
             // Add files to ZIP using async approach
             const filePromises = decryptedImages.map(async ({ fileName, url }) => {
                 const response = await fetch(url);
-                const blob = await response.blob(); // Get the image as a Blob
-                const arrayBuffer = await blob.arrayBuffer(); // Convert Blob to ArrayBuffer
-                folder.file(fileName, arrayBuffer); // Add the ArrayBuffer directly to the ZIP
+                const blob = await response.blob();
+                const arrayBuffer = await blob.arrayBuffer();
+                folder.file(fileName, arrayBuffer);
             });
 
             const watermarkedFilePromises = decryptedWatermarkedImages.map(async ({ fileName, url }) => {
                 const response = await fetch(url);
-                const blob = await response.blob(); // Get the image as a Blob
-                const arrayBuffer = await blob.arrayBuffer(); // Convert Blob to ArrayBuffer
-                watermarkedFolder.file(fileName, arrayBuffer); // Add the ArrayBuffer directly to the ZIP
+                const blob = await response.blob();
+                const arrayBuffer = await blob.arrayBuffer();
+                watermarkedFolder.file(fileName, arrayBuffer);
             });
 
             const resizedFilePromises = decryptedResizedImages.map(async ({ fileName, url }) => {
                 const response = await fetch(url);
-                const blob = await response.blob(); // Get the image as a Blob
-                const arrayBuffer = await blob.arrayBuffer(); // Convert Blob to ArrayBuffer
-                resizedFolder.file(fileName, arrayBuffer); // Add the ArrayBuffer directly to the ZIP
+                const blob = await response.blob();
+                const arrayBuffer = await blob.arrayBuffer();
+                resizedFolder.file(fileName, arrayBuffer);
             });
 
-            // Wait for all files to be added before generating the ZIP
-            await Promise.all(filePromises, watermarkedFilePromises, resizedFilePromises);
-
+            // Wait for all files to be added
+            await Promise.all([...filePromises, ...watermarkedFilePromises, ...resizedFilePromises]);
 
             // Generate the ZIP file
             const zipBlob = await zip.generate({ type: 'blob' });
@@ -241,18 +238,17 @@
 
             $('#spinner').hide();
             $('#startDecryption').replaceWith(`
-                <a id="downloadAllButton" 
+                <a id="downloadAllButton"
                     class="downloadAllButton btn btn-primary"
-                    href="${zipUrl}" 
-                    download="${albumName.charAt(0).toUpperCase() + albumName.slice(1)}.zip" 
+                    href="${zipUrl}"
+                    download="${albumName.charAt(0).toUpperCase() + albumName.slice(1)}.zip"
                     style="background-color: #477DAC;">
                     Download ${decryptedImages.length + decryptedWatermarkedImages.length + decryptedResizedImages.length} total files (${zipSizeMB}MB)
                 </a>
             `);
-
-
         }
 
+        // Decrypt function remains the same
         async function decryptFile(filePath, hexKey) {
             const key = hexToBytes(hexKey);
             const iv = new Uint8Array(16);
@@ -287,6 +283,7 @@
             }
             return new Uint8Array(bytes);
         }
+
     </script>
 
 
