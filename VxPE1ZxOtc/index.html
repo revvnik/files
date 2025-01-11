@@ -12,7 +12,7 @@
     <link href="../assets/css/style.css" rel="stylesheet">
     <link href="../node_modules/lightbox2/src/css/lightbox.css" rel="stylesheet" />
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+    <script src="../node_modules/pizzip/dist/pizzip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32x32.png">
@@ -80,11 +80,6 @@
             if (hexKey) {
                 const { albumName, albumFiles, watermarkedFiles, instagramSizedFiles } = await loadEncryptedFiles();
                 decryptAndDisplayImages(albumFiles, hexKey, albumName, watermarkedFiles, instagramSizedFiles);
-                // Validate key length
-                if (hexKey.length !== 16 && hexKey.length !== 24 && hexKey.length !== 32) {
-                    alert('Key length must be 16, 24, or 32 characters.');
-                    return;
-                }
             } else {
                 alert("No key provided.");
             }
@@ -235,7 +230,7 @@
             await Promise.all(imageLoadPromises, watermarkedImageDecryptionPromises, resizedImageDecryptionPromises);
 
             // Generate ZIP
-            const zip = new JSZip();
+            const zip = new Pizzip();
             const folder = zip.folder(albumName);
             const watermarkedFolder = zip.folder("Watermarked");
             const resizedFolder = zip.folder("Resized");
@@ -244,27 +239,41 @@
             const filePromises = decryptedImages.map(async ({ fileName, url }) => {
                 const response = await fetch(url);
                 const blob = await response.blob();
-                folder.file(fileName, blob);  // Add the file to the folder in the ZIP
+                const fileType = blob.type || "application/octet-stream"; // Get MIME type from the blob
+                const normalImage = new File([blob], fileName, { type: fileType });
+                folder.file(fileName, normalImage); // Add the file to the folder in the ZIP
             });
 
             const watermarkedFilePromises = decryptedWatermarkedImages.map(async ({ fileName, url }) => {
                 const response = await fetch(url);
                 const blob = await response.blob();
-                watermarkedFolder.file(fileName, blob);  // Add the file to the folder in the ZIP
+                const fileType = blob.type || "application/octet-stream"; // Get MIME type from the blob
+                const watermarkedImage = new File([blob], fileName, { type: fileType });
+                watermarkedFolder.file(fileName, watermarkedImage); // Add the file to the folder in the ZIP
             });
 
             const resizedFilePromises = decryptedResizedImages.map(async ({ fileName, url }) => {
                 const response = await fetch(url);
                 const blob = await response.blob();
-                resizedFolder.file(fileName, blob);  // Add the file to the folder in the ZIP
+                const fileType = blob.type || "application/octet-stream"; // Get MIME type from the blob
+                const resizedImage = new File([blob], fileName, { type: fileType });
+                resizedFolder.file(fileName, resizedImage); // Add the file to the folder in the ZIP
             });
 
             // Wait for all files to be added before generating the ZIP
             await Promise.all(filePromises, watermarkedFilePromises, resizedFilePromises);
 
             // Generate the ZIP file
-            const zipBlob = await zip.generateAsync({ type: 'blob', compression: "DEFLATE", compressionOptions: { level: 6 } });
+            const zipBlob = await zip.generate({ type: 'blob' });
             const zipUrl = URL.createObjectURL(zipBlob);
+            // Get the size of the Blob
+            const zipSize = zipBlob.size; // Size in bytes
+
+            console.log(`ZIP size: ${zipSize} bytes`);
+
+            // Optionally, convert the size to a more readable format (e.g., KB or MB)
+            const zipSizeKB = (zipSize / 1024).toFixed(2); // Size in KB
+            const zipSizeMB = (zipSize / (1024 * 1024)).toFixed(2); // Size in MB
 
             // Add Download All Button
             startDecryptionButton.replaceWith(`
@@ -273,7 +282,7 @@
                         href="${zipUrl}"
                         download="${albumName.charAt(0).toUpperCase() + albumName.slice(1)}.zip"
                         style="background-color: #477DAC;">
-                        Download ${decryptedImages.length + decryptedWatermarkedImages.length + decryptedResizedImages.length} total files
+                        Download ${decryptedImages.length + decryptedWatermarkedImages.length + decryptedResizedImages.length} total files (${zipSizeMB}MB)
                     </a>
                 `);
 
